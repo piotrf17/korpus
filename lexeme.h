@@ -16,11 +16,19 @@ class Lexeme {
   ~Lexeme();
 
   static Lexeme* FromXml(const pugi::xml_node& node);
+
+  const std::string& value() const {
+    return value_;
+  }
+
+  const std::string& base() const {
+    return base_;
+  }
   
  private:
   std::string value_;
-  //  std::string base_;
-  //  std::unordered_set<std::string> attributes_;
+  std::string base_;
+  std::unordered_set<std::string> attributes_;
 };
   
 }  // namespace korpus

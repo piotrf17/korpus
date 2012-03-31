@@ -2,6 +2,7 @@
 #include <string>
 
 #include "corpus.h"
+#include "index.h"
 
 int main(int argc, char** argv) {
   std::string corpus_root("/home/piotrf/projects/polish/nkjp-podkorpus/");
@@ -16,6 +17,9 @@ int main(int argc, char** argv) {
     std::cout << "Error loading doc: " << error << std::endl;
     return 1;
   }
+
+  korpus::Index index;
+  index.Build(corpus);
 
   return 0;
 }

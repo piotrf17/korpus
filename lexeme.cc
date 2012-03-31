@@ -10,12 +10,12 @@ namespace korpus {
 
 Lexeme::Lexeme(const std::string& value, const std::string& analysis) : 
   value_(value) {
-  /*  std::vector<std::string> tokens;
+  std::vector<std::string> tokens;
   boost::split(tokens, analysis, boost::is_any_of(":"));
   if (tokens.size() > 0) {
     base_ = tokens[0];
     attributes_.insert(tokens.begin() + 1, tokens.end());
-    }*/
+  }
 }
 
 Lexeme::~Lexeme() {

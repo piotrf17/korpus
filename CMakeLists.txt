@@ -9,6 +9,7 @@ add_subdirectory(pugixml)
 set(SRCS
     corpus.cc
     document.cc
+    index.cc
     lexeme.cc
     korpus.cc)
 

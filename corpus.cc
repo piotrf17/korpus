@@ -37,4 +37,58 @@ bool Corpus::LoadFromXml(const std::string& corpus_root,
   return true;
 }
 
+CorpusIterator::CorpusIterator(const Corpus& corpus) :
+    corpus_(corpus),
+    it_(corpus.documents_.begin()) {
+  if (!end()) {
+    doc_it_.reset(new DocumentIterator(**it_));
+  }
+}
+
+CorpusIterator::CorpusIterator(const CorpusIterator& it) :
+    corpus_(it.corpus_),
+    it_(it.it_) {
+  doc_it_.reset(new DocumentIterator(*it.doc_it_));
+}
+
+CorpusIterator::~CorpusIterator() {
+}
+
+CorpusIterator& CorpusIterator::operator++() {
+  doc_it_->operator++();
+  if (doc_it_->end()) {
+    ++it_;
+    doc_it_.reset(new DocumentIterator(**it_));
+  }
+  return *this;
+}
+
+bool CorpusIterator::operator==(const CorpusIterator& it) const {
+  return it_ == it.it_ && doc_it_->operator==(*it.doc_it_);
+}
+
+bool CorpusIterator::operator!=(const CorpusIterator& it) const {
+  return !operator==(it);
+}
+
+Lexeme& CorpusIterator::operator*() {
+  return *operator->();
+}
+
+Lexeme* CorpusIterator::operator->() {
+  return doc_it_->operator->();
+}
+
+bool CorpusIterator::end() const {
+  return it_ == corpus_.documents_.end();
+}
+
+int CorpusIterator::docid() const {
+  return it_ - corpus_.documents_.begin();
+}
+
+int CorpusIterator::token() const {
+  return doc_it_->token();
+}
+
 }  // namespace korpus

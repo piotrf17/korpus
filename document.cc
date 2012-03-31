@@ -1,8 +1,12 @@
+#include <iostream>
+
 #include "document.h"
 #include "lexeme.h"
 #include "pugixml/pugixml.hpp"
 
 namespace korpus {
+
+const char* kMorphoFileName = "ann_morphosyntax.xml";
 
 Document::Document() {
 }
@@ -21,7 +25,7 @@ Document::~Document() {
 }
 
 bool Document::LoadFromXml(const std::string& doc_root, std::string* error) {
-  std::string filename(doc_root + "/ann_morphosyntax.xml");
+  std::string filename(doc_root + "/" + kMorphoFileName);
   
   pugi::xml_document doc;
   pugi::xml_parse_result result = doc.load_file(filename.c_str());
@@ -55,6 +59,62 @@ bool Document::LoadFromXml(const std::string& doc_root, std::string* error) {
   }
 
   return true;
+}
+
+DocumentIterator::DocumentIterator(const Document& doc) :
+    doc_(doc),
+    section_(0),
+    sentence_(0),
+    lexeme_(0) {
+}
+
+DocumentIterator::DocumentIterator(const DocumentIterator& it) :
+    doc_(it.doc_),
+    section_(it.section_),
+    sentence_(it.sentence_),
+    lexeme_(it.lexeme_) {
+}
+
+DocumentIterator::~DocumentIterator() {
+}
+
+DocumentIterator& DocumentIterator::operator++() {
+  if (!end()) {
+    ++lexeme_;
+    if (lexeme_ >= static_cast<int>(doc_.sections_[section_][sentence_].size())) {
+      ++sentence_;
+      if (sentence_ >= static_cast<int>(doc_.sections_[section_].size())) {
+        ++section_;
+        sentence_ = 0;
+      }
+      lexeme_ = 0;
+    }
+  }
+  return *this;
+}
+
+bool DocumentIterator::operator==(const DocumentIterator& it) const {
+  return section_ == it.section_ && sentence_ == it.sentence_ && lexeme_ == it.lexeme_;
+}
+
+bool DocumentIterator::operator!=(const DocumentIterator& it) const {
+  return !operator==(it);
+}
+
+Lexeme& DocumentIterator::operator*() {
+  return *operator->();
+}
+
+Lexeme* DocumentIterator::operator->() {
+  return doc_.sections_[section_][sentence_][lexeme_];
+}
+
+bool DocumentIterator::end() const {
+  return section_ >= static_cast<int>(doc_.sections_.size());
+}
+
+int DocumentIterator::token() const {
+  return (section_ << 24) + (sentence_ << 16) + lexeme_;
 }
 
 }
