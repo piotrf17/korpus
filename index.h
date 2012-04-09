@@ -24,7 +24,7 @@ class Index {
   void Build(const Corpus& corpus);
 
   bool QueryBase(const std::string& word,
-                 ResultSet* result);
+                 ResultSet* result) const;
   
  private:
   std::unordered_map<std::string, PostingList> base_index_;
