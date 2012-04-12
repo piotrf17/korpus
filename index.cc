@@ -3,19 +3,21 @@
 #include "corpus.h"
 #include "index.h"
 #include "lexeme.h"
+#include "result.h"
 
 namespace korpus {
 
-Index::Index() {
+Index::Index(const Corpus& corpus) :
+    corpus_(corpus) {
 }
 
 Index::~Index() {
 }
 
-void Index::Build(const Corpus& corpus) {
+void Index::Build() {
   int tokens = 0;
   
-  for (CorpusIterator it(corpus); !it.end(); ++it) {
+  for (CorpusIterator it(corpus_); !it.end(); ++it) {
     Location loc;
     loc.docid = it.docid();
     loc.token = it.token();
@@ -32,12 +34,17 @@ void Index::Build(const Corpus& corpus) {
 }
 
 bool Index::QueryBase(const std::string& word,
-                      ResultSet* result) const {
+                      std::vector<Result>* results) const {
   auto it = base_index_.find(word);
   if (it == base_index_.end()) {
     std::cout << "Token not found!";
   } else {
-    std::cout << "Posting list size: " << it->second.size() << std::endl;;
+    const PostingList& posting_list = it->second;
+    results->clear();
+    for (auto loc_it = posting_list.begin(); loc_it != posting_list.end();
+         ++loc_it) {
+      results->push_back(Result(&corpus_, loc_it->docid, loc_it->token));
+    }
   }
   return true;
 }

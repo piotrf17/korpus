@@ -1,3 +1,4 @@
+#include <cassert>
 #include <iostream>
 
 #include "document.h"
@@ -61,6 +62,40 @@ bool Document::LoadFromXml(const std::string& doc_root, std::string* error) {
   return true;
 }
 
+Lexeme* Document::GetLexeme(uint64_t token) const {
+  int section, sentence, lexeme;
+  DecodeToken(token, &section, &sentence, &lexeme);
+  return sections_[section][sentence][lexeme];
+}
+
+const std::vector<Lexeme*>& Document::GetSentence(uint64_t token) const {
+  int section, sentence, lexeme;
+  DecodeToken(token, &section, &sentence, &lexeme);
+  return sections_[section][sentence];
+}
+
+
+inline void Document::EncodeToken(int section,
+                                  int sentence,
+                                  int lexeme,
+                                  uint64_t* token) {
+  assert(lexeme < (1 << 16));
+  assert(section < (1 << 16));
+  *token =
+      (static_cast<uint64_t>(section) << 48) |
+      (static_cast<uint64_t>(sentence) << 16) |
+      (lexeme & 0x0000ffff);
+}
+
+inline void Document::DecodeToken(uint64_t token,
+                                  int* section,
+                                  int* sentence,
+                                  int* lexeme) {
+  *section = static_cast<int>(token >> 48);
+  *sentence = static_cast<int>(token >> 16);
+  *lexeme = static_cast<int>(token & 0xffff);
+}
+
 DocumentIterator::DocumentIterator(const Document& doc) :
     doc_(doc),
     section_(0),
@@ -113,8 +148,10 @@ bool DocumentIterator::end() const {
   return section_ >= static_cast<int>(doc_.sections_.size());
 }
 
-int DocumentIterator::token() const {
-  return (section_ << 24) + (sentence_ << 16) + lexeme_;
+uint64_t DocumentIterator::token() const {
+  uint64_t token;
+  Document::EncodeToken(section_, sentence_, lexeme_, &token);
+  return token;
 }
 
 }

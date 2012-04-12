@@ -37,6 +37,15 @@ bool Corpus::LoadFromXml(const std::string& corpus_root,
   return true;
 }
 
+Lexeme* Corpus::GetLexeme(int docid, uint64_t token) const {
+  return documents_[docid]->GetLexeme(token);
+}
+
+const std::vector<Lexeme*>& Corpus::GetSentence(int docid,
+                                                uint64_t token) const {
+  return documents_[docid]->GetSentence(token);
+}
+
 CorpusIterator::CorpusIterator(const Corpus& corpus) :
     corpus_(corpus),
     it_(corpus.documents_.begin()) {

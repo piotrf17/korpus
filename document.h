@@ -1,6 +1,7 @@
 #ifndef KORPUS_DOCUMENT_H
 #define KORPUS_DOCUMENT_H
 
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -17,8 +18,21 @@ class Document {
   ~Document();
 
   bool LoadFromXml(const std::string& doc_root, std::string* error);
+
+  Lexeme* GetLexeme(uint64_t token) const;
+  const std::vector<Lexeme*>& GetSentence(uint64_t token) const;
+
+  // Exposed for testing.
+  static void EncodeToken(int section,
+                          int sentence,
+                          int lexeme,
+                          uint64_t* token);
+  static  void DecodeToken(uint64_t token,
+                           int* section,
+                           int* sentence,
+                           int* lexeme);
   
- private:
+ private:  
   friend class DocumentIterator;
   
   std::vector<Section> sections_;
@@ -40,7 +54,7 @@ class DocumentIterator {
 
   bool end() const;
 
-  int token() const;
+  uint64_t token() const;
   
  private:
   const Document& doc_;

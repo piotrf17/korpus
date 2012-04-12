@@ -3,9 +3,25 @@
 
 #include "corpus.h"
 #include "index.h"
+#include "lexeme.h"
+#include "result.h"
+
+void BuildQuestion(const korpus::Result& result) {
+  std::vector<korpus::Lexeme*> context;
+  unsigned int pos = result.GetContext(&context);
+
+  for (unsigned int i = 0; i < context.size(); ++i) {
+    if (i != pos) {
+      std::cout << context[i]->value() << " ";
+    } else {
+      std::cout << "____________ ";
+    }
+  }
+  std::cout << std::endl;
+}
 
 int main(int argc, char** argv) {
-  std::string corpus_root("/home/piotrf/projects/polish/nkjp-podkorpus/");
+  std::string corpus_root("/home/piotrf/data/nkjp-podkorpus/");
   std::vector<std::string> documents;
   documents.push_back("TrybunaSlaska");
   documents.push_back("Sztafeta");
@@ -21,12 +37,15 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  korpus::Index index;
-  index.Build(corpus);
+  korpus::Index index(corpus);
+  index.Build();
 
-  index.QueryBase("być", NULL);
-  index.QueryBase("ten", NULL);
-  index.QueryBase("czerwony", NULL);
-
+  std::vector<korpus::Result> results;
+  index.QueryBase("komputer", &results);
+  std::cout << results.size() << " result(s) for \"komputer\":" << std::endl;
+  for (auto it = results.begin(); it != results.end(); ++it) {
+    BuildQuestion(*it);
+  }
+  
   return 0;
 }

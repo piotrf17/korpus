@@ -22,6 +22,9 @@ class Corpus {
                    const std::vector<std::string>& document_names,
                    std::string* error);
 
+  Lexeme* GetLexeme(int docid, uint64_t token) const;
+  const std::vector<Lexeme*>& GetSentence(int docid, uint64_t token) const;
+  
  private:
   friend class CorpusIterator;
   
