@@ -36,16 +36,16 @@ int main(int argc, char** argv) {
     std::cout << "Error loading doc: " << error << std::endl;
     return 1;
   }
-
+  
   korpus::Index index(corpus);
   index.Build();
 
   std::vector<korpus::Result> results;
-  index.QueryBase("komputer", &results);
-  std::cout << results.size() << " result(s) for \"komputer\":" << std::endl;
+  index.QueryBase("specjalny", &results);
+  std::cout << results.size() << " result(s) for \"specjalny\":" << std::endl;
   for (auto it = results.begin(); it != results.end(); ++it) {
     BuildQuestion(*it);
   }
-  
+
   return 0;
 }

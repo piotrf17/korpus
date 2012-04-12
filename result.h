@@ -2,6 +2,7 @@
 #define KORPUS_RESULT_H
 
 #include <cstdint>
+#include <string>
 #include <vector>
 
 namespace korpus {
@@ -16,6 +17,9 @@ class Result {
          const uint64_t token);
 
   int GetContext(std::vector<Lexeme*>* context) const;
+
+  const std::string& base() const;
+  const std::string& value() const;
   
  private:
   const Corpus* corpus_;

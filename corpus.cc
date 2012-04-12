@@ -96,7 +96,7 @@ int CorpusIterator::docid() const {
   return it_ - corpus_.documents_.begin();
 }
 
-int CorpusIterator::token() const {
+uint64_t CorpusIterator::token() const {
   return doc_it_->token();
 }
 

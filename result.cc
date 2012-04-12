@@ -25,4 +25,12 @@ int Result::GetContext(std::vector<Lexeme*>* context) const {
   return -1;
 }
 
+const std::string& Result::base() const {
+  return lexeme_->base();
+}
+
+const std::string& Result::value() const {
+  return lexeme_->value();
+}
+
 };

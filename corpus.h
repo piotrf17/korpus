@@ -48,7 +48,7 @@ class CorpusIterator {
   bool end() const;
 
   int docid() const;
-  int token() const;
+  uint64_t token() const;
   
  private:
   const Corpus& corpus_;
