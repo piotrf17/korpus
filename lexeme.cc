@@ -4,9 +4,15 @@
 #include <cstring>
 #include <vector>
 
+
+#include "lexeme.pb.h"
 #include "pugixml/pugixml.hpp"
 
 namespace korpus {
+
+Lexeme::Lexeme(const std::string& value) :
+    value_(value) {
+}
 
 Lexeme::Lexeme(const std::string& value, const std::string& analysis) : 
   value_(value) {
@@ -41,4 +47,39 @@ Lexeme* Lexeme::FromXml(const pugi::xml_node& node) {
   return new Lexeme(value, analysis);
 }
 
+Lexeme* Lexeme::FromBinary(std::ifstream* infile) {
+  StoredLexeme sl;
+  size_t data_size;
+  infile->read(reinterpret_cast<char*>(&data_size), sizeof(size_t));
+  char* data = new char[data_size];
+  infile->read(data, data_size);
+  if (!sl.ParseFromArray(data, data_size)) {
+    delete[] data;
+    return false;
+  }
+  delete[] data;
+  Lexeme* lexeme = new Lexeme(sl.value());
+  lexeme->base_ = sl.base();
+  lexeme->attributes_.insert(sl.attribute().begin(),
+                             sl.attribute().end());
+  return lexeme;
 }
+
+bool Lexeme::SaveToBinary(std::ofstream* outfile) const {
+  StoredLexeme lexeme;
+  lexeme.set_value(value_);
+  lexeme.set_base(base_);
+  for (auto it = attributes_.begin(); it != attributes_.end(); ++it) {
+    *lexeme.add_attribute() = *it;
+  }
+  std::string data;
+  if (!lexeme.SerializeToString(&data)) {
+    return false;
+  }
+  size_t data_size = data.size();
+  outfile->write(reinterpret_cast<char*>(&data_size), sizeof(size_t));  
+  outfile->write(data.c_str(), data_size);
+  return true;
+}
+
+}  // namespace korpus

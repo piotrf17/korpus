@@ -2,8 +2,11 @@
 #define KORPUS_DOCUMENT_H
 
 #include <cstdint>
+#include <fstream>
 #include <string>
 #include <vector>
+
+#include <gtest/gtest_prod.h>
 
 namespace korpus {
 
@@ -19,6 +22,9 @@ class Document {
 
   bool LoadFromXml(const std::string& doc_root, std::string* error);
 
+  bool LoadFromBinary(std::ifstream* infile);
+  bool SaveToBinary(std::ofstream* outfile) const;
+  
   Lexeme* GetLexeme(uint64_t token) const;
   const std::vector<Lexeme*>& GetSentence(uint64_t token) const;
 

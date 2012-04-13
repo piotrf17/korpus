@@ -62,6 +62,52 @@ bool Document::LoadFromXml(const std::string& doc_root, std::string* error) {
   return true;
 }
 
+bool Document::LoadFromBinary(std::ifstream* infile) {
+  // Load Sections.
+  size_t num_sections;
+  infile->read(reinterpret_cast<char*>(&num_sections), sizeof(size_t));
+  while (num_sections > 0) {
+    sections_.push_back(Section());
+    Section& section = sections_.back();
+    // Load Sentences.
+    size_t num_sentences;
+    infile->read(reinterpret_cast<char*>(&num_sentences), sizeof(size_t));
+    while (num_sentences > 0) {
+      section.push_back(Sentence());
+      Sentence& sentence = section.back();
+      // Load Lexemes.
+      size_t num_lexemes;
+      infile->read(reinterpret_cast<char*>(&num_lexemes), sizeof(size_t));
+      while (num_lexemes > 0) {
+        sentence.push_back(Lexeme::FromBinary(infile));
+        --num_lexemes;
+      }      
+      --num_sentences;
+    }    
+    --num_sections;
+  }
+  return true;
+}
+
+bool Document::SaveToBinary(std::ofstream* outfile) const {
+  size_t num_sections = sections_.size();
+  outfile->write(reinterpret_cast<char*>(&num_sections), sizeof(size_t));
+  for (auto sec_it = sections_.begin(); sec_it != sections_.end(); ++sec_it) {
+    size_t num_sentences = sec_it->size();
+    outfile->write(reinterpret_cast<char*>(&num_sentences), sizeof(size_t));
+    for (auto sen_it = sec_it->begin(); sen_it != sec_it->end(); ++sen_it) {
+      size_t num_lexemes = sen_it->size();
+      outfile->write(reinterpret_cast<char*>(&num_lexemes), sizeof(size_t));
+      for (auto lex_it = sen_it->begin(); lex_it != sen_it->end(); ++lex_it) {
+        if (!(*lex_it)->SaveToBinary(outfile)) {
+          return false;
+        }
+      }
+    }
+  }
+  return true;
+}
+
 Lexeme* Document::GetLexeme(uint64_t token) const {
   int section, sentence, lexeme;
   DecodeToken(token, &section, &sentence, &lexeme);

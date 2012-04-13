@@ -1,6 +1,7 @@
 #ifndef KORPUS_LEXEME_H
 #define KORPUS_LEXEME_H
 
+#include <fstream>
 #include <string>
 #include <unordered_set>
 
@@ -12,10 +13,14 @@ namespace korpus {
   
 class Lexeme {
  public:
+  explicit Lexeme(const std::string& value);
   Lexeme(const std::string& value, const std::string& analysis);
   ~Lexeme();
 
   static Lexeme* FromXml(const pugi::xml_node& node);
+  static Lexeme* FromBinary(std::ifstream* infile);
+
+  bool SaveToBinary(std::ofstream* outfile) const;
 
   const std::string& value() const {
     return value_;

@@ -21,6 +21,9 @@ class Corpus {
   bool LoadFromXml(const std::string& corpus_root,
                    const std::vector<std::string>& document_names,
                    std::string* error);
+  
+  bool LoadFromBinary(const std::string& binary_file);
+  bool SaveToBinary(const std::string& binary_file) const;
 
   Lexeme* GetLexeme(int docid, uint64_t token) const;
   const std::vector<Lexeme*>& GetSentence(int docid, uint64_t token) const;

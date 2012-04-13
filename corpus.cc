@@ -1,3 +1,4 @@
+#include <fstream>
 #include <iostream>
 
 #include "corpus.h"
@@ -20,7 +21,6 @@ bool Corpus::LoadFromXml(const std::string& corpus_root,
   return false;
 }
 
-
 bool Corpus::LoadFromXml(const std::string& corpus_root,
                          const std::vector<std::string>& document_names,
                          std::string* error) {
@@ -37,6 +37,40 @@ bool Corpus::LoadFromXml(const std::string& corpus_root,
   return true;
 }
 
+bool Corpus::LoadFromBinary(const std::string& binary_file) {
+  std::ifstream infile(binary_file.c_str(), std::ifstream::binary);
+
+  size_t num_documents;
+  infile.read(reinterpret_cast<char*>(&num_documents), sizeof(size_t));
+  while (num_documents > 0) {
+    Document* doc = new Document();
+    if (!doc->LoadFromBinary(&infile)) {
+      delete doc;
+      return false;
+    }
+    documents_.push_back(doc);
+    --num_documents;
+  }
+
+  infile.close();
+  return true;
+}
+
+bool Corpus::SaveToBinary(const std::string& binary_file) const {
+  std::ofstream outfile(binary_file.c_str(), std::ofstream::binary);
+
+  size_t num_documents = documents_.size();
+  outfile.write(reinterpret_cast<char*>(&num_documents), sizeof(size_t));
+  for (auto it = documents_.begin(); it != documents_.end(); ++it) {
+    if (!(*it)->SaveToBinary(&outfile)) {
+      return false;
+    }
+  }
+  
+  outfile.close();
+  return true;
+}
+
 Lexeme* Corpus::GetLexeme(int docid, uint64_t token) const {
   return documents_[docid]->GetLexeme(token);
 }
@@ -45,6 +79,7 @@ const std::vector<Lexeme*>& Corpus::GetSentence(int docid,
                                                 uint64_t token) const {
   return documents_[docid]->GetSentence(token);
 }
+
 
 CorpusIterator::CorpusIterator(const Corpus& corpus) :
     corpus_(corpus),

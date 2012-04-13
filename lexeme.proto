@@ -1,0 +1,8 @@
+package korpus;
+
+message StoredLexeme {
+  optional string value = 1;
+  optional string base = 2;
+
+  repeated string attribute = 3;
+}

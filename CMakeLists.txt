@@ -1,7 +1,14 @@
 cmake_minimum_required(VERSION 2.6)
 project(KORPUS)
 
-set(LIBS pugixml)
+# Protobuf library
+include(FindProtobuf)
+find_package(Protobuf REQUIRED)
+include_directories(${PROTOBUF_INCLUDE_DIR})
+
+set(LIBS 
+    pugixml
+    ${PROTOBUF_LIBRARY})
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++0x -g -Wall")
 
 # xml library
@@ -12,21 +19,34 @@ set(SRCS
     corpus.cc
     document.cc
     index.cc
+    lexeme.pb.cc
     lexeme.cc
     result.cc)
 add_library(korpus ${SRCS})  
 
-# main executable
+# korpus front end
 set(SRCS
     korpus.cc)
 add_executable(korpusfe ${SRCS})
 target_link_libraries(korpusfe korpus ${LIBS})
 
+# questioner
+set(SRCS
+    questioner.cc)
+add_executable(questioner ${SRCS})
+target_link_libraries(questioner korpus ${LIBS})
+
 # tests
 include(CTest)
 if(BUILD_TESTING)
   enable_testing()
+
   add_executable(document_test document_test.cc)
-  target_link_libraries(document_test korpus pugixml pthread gtest_main)
+  target_link_libraries(document_test korpus pthread gtest_main ${LIBS})
   add_test(DocumentTest ${PROJECT_BINARY_DIR}/document_test)
+
+  add_executable(lexeme_test lexeme_test.cc)
+  target_link_libraries(lexeme_test korpus pthread gtest_main ${LIBS})
+  add_test(LexemeTest ${PROJECT_BINARY_DIR}/lexeme_test)
+
 endif(BUILD_TESTING)
