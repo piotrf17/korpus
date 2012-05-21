@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include "corpus.h"
+#include "korpus/corpus.h"
 
 int main(int argc, char** argv) {
   std::string corpus_root("/home/piotrf/data/nkjp-podkorpus/");

@@ -1,8 +1,8 @@
 #include <fstream>
 #include <iostream>
 
-#include "corpus.h"
-#include "document.h"
+#include "korpus/corpus.h"
+#include "korpus/document.h"
 
 namespace korpus {
 

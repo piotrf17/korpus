@@ -1,8 +1,9 @@
+#include "korpus/document.h"
+
 #include <cassert>
 #include <iostream>
 
-#include "document.h"
-#include "lexeme.h"
+#include "korpus/lexeme.h"
 #include "pugixml/pugixml.hpp"
 
 namespace korpus {

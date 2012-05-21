@@ -1,10 +1,10 @@
-#include "question_server.h"
+#include "questioner/question_server.h"
 
 #include <functional>
 #include <iostream>
 
-#include "../corpus.h"
-#include "../index.h"
+#include "korpus/corpus.h"
+#include "korpus/index.h"
 
 namespace questioner {
 

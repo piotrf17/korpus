@@ -1,8 +1,8 @@
 #include <fstream>
 #include <gtest/gtest.h>
 
-#include "document.h"
-#include "lexeme.h"
+#include "korpus/document.h"
+#include "korpus/lexeme.h"
 
 namespace korpus {
 

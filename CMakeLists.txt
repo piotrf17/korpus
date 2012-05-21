@@ -1,54 +1,52 @@
 cmake_minimum_required(VERSION 2.6)
 project(KORPUS)
 
+# all header files are specified relative to base
+include_directories(${PROJECT_SOURCE_DIR})
+
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++0x -g -Wall")
+
+##############################################
+#  Configure required libraries
+
 # gtest
 if(BUILD_TESTING)
-  add_subdirectory("/usr/src/gtest/" "${CMAKE_CURRENT_BINARY_DIR}/gtest")
+  add_subdirectory("/usr/src/gtest/" "${CMAKE_BINARY_DIR}/gtest")
 endif(BUILD_TESTING)
+include(CTest)
 
 # Protobuf library
 include(FindProtobuf)
 find_package(Protobuf REQUIRED)
 include_directories(${PROTOBUF_INCLUDE_DIR})
 
-set(LIBS 
+# Libraries that applications must link against
+set(APP_LIBS 
+    korpus
     pugixml
-    ${PROTOBUF_LIBRARY})
-set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++0x -g -Wall")
+    ${PROTOBUF_LIBRARIES})
 
-# build xml library
+set(TEST_LIBS
+    ${APP_LIBS}
+    pthread)
+
+#############################################
+#  Build targets
+
+# xml helper library
 add_subdirectory(pugixml)
 
-# korpus library
-set(SRCS
-    corpus.cc
-    document.cc
-    index.cc
-    lexeme.pb.cc
-    lexeme.cc
-    result.cc)
-add_library(korpus ${SRCS})  
-
-# korpus front end
-set(SRCS
-    korpus.cc)
-add_executable(korpusfe ${SRCS})
-target_link_libraries(korpusfe korpus ${LIBS})
-
-# tests
-include(CTest)
-if(BUILD_TESTING)
-  enable_testing()
-
-  add_executable(document_test document_test.cc)
-  target_link_libraries(document_test korpus pthread gtest_main ${LIBS})
-  add_test(DocumentTest ${PROJECT_BINARY_DIR}/document_test)
-
-  add_executable(lexeme_test lexeme_test.cc)
-  target_link_libraries(lexeme_test korpus pthread gtest_main ${LIBS})
-  add_test(LexemeTest ${PROJECT_BINARY_DIR}/lexeme_test)
-
-endif(BUILD_TESTING)
+# main korpus library
+add_subdirectory(korpus)
 
 # questioner web app
 add_subdirectory(questioner)
+
+# tool to build a corpus
+add_executable(build_corpus build_corpus.cc)
+target_link_libraries(build_corpus ${APP_LIBS})
+
+if(BUILD_TESTING)
+  enable_testing()
+endif(BUILD_TESTING)
+

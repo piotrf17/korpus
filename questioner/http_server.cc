@@ -1,9 +1,9 @@
-#include "http_server.h"
+#include "questioner/http_server.h"
 
 #include <cstring>
 #include <cstdio>
 
-#include "mongoose/mongoose.h"
+#include "questioner/mongoose/mongoose.h"
 
 namespace questioner {
 

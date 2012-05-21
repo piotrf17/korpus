@@ -1,11 +1,10 @@
-#include "lexeme.h"
+#include "korpus/lexeme.h"
 
 #include <boost/algorithm/string.hpp>
 #include <cstring>
 #include <vector>
 
-
-#include "lexeme.pb.h"
+#include "korpus/lexeme.pb.h"
 #include "pugixml/pugixml.hpp"
 
 namespace korpus {

@@ -6,8 +6,8 @@
 
 #include <boost/function.hpp>
 
-#include "http_server.h"
-#include "question_builder.h"
+#include "questioner/http_server.h"
+#include "questioner/question_builder.h"
 
 namespace korpus {
 class Corpus;

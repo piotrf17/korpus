@@ -1,8 +1,8 @@
-#include "result.h"
+#include "korpus/result.h"
 
-#include "corpus.h"
-#include "index.h"
-#include "lexeme.h"
+#include "korpus/corpus.h"
+#include "korpus/index.h"
+#include "korpus/lexeme.h"
 
 namespace korpus {
 

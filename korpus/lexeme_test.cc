@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
 #include <fstream>
 #include <memory>
-#include "lexeme.h"
+
+#include "korpus/lexeme.h"
 
 namespace korpus {
 
