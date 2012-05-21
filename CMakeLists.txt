@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 2.6)
 project(KORPUS)
 
+# gtest
+if(BUILD_TESTING)
+  add_subdirectory("/usr/src/gtest/" "${CMAKE_CURRENT_BINARY_DIR}/gtest")
+endif(BUILD_TESTING)
+
 # Protobuf library
 include(FindProtobuf)
 find_package(Protobuf REQUIRED)
@@ -11,7 +16,7 @@ set(LIBS
     ${PROTOBUF_LIBRARY})
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++0x -g -Wall")
 
-# xml library
+# build xml library
 add_subdirectory(pugixml)
 
 # korpus library
@@ -30,12 +35,6 @@ set(SRCS
 add_executable(korpusfe ${SRCS})
 target_link_libraries(korpusfe korpus ${LIBS})
 
-# questioner
-set(SRCS
-    questioner.cc)
-add_executable(questioner ${SRCS})
-target_link_libraries(questioner korpus ${LIBS})
-
 # tests
 include(CTest)
 if(BUILD_TESTING)
@@ -50,3 +49,6 @@ if(BUILD_TESTING)
   add_test(LexemeTest ${PROJECT_BINARY_DIR}/lexeme_test)
 
 endif(BUILD_TESTING)
+
+# questioner web app
+add_subdirectory(questioner)
