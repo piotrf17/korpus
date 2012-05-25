@@ -29,6 +29,10 @@ class Lexeme {
   const std::string& base() const {
     return base_;
   }
+
+  const std::unordered_set<std::string>& attributes() const {
+    return attributes_;
+  }
   
  private:
   std::string value_;

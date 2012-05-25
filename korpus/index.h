@@ -25,16 +25,20 @@ class Index {
 
   void Build();
 
-  bool QueryBase(const std::string& word,
-                 std::vector<Result>* results) const;
+  bool Query(const std::vector<std::string> query_terms,
+             std::vector<Result>* results) const;
   
  private:
+  void ListIntersect(const PostingList& a,
+                     const PostingList& b,
+                     PostingList* c) const;
+  
+  // Disallow evil methods
   Index(const Index& o);
   Index& operator=(const Index& o);
   
   const Corpus& corpus_;
   
-  std::unordered_map<std::string, PostingList> base_index_;
   std::unordered_map<std::string, PostingList> index_;
 };
 

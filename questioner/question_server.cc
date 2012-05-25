@@ -54,6 +54,7 @@ void QuestionServer::ServeFrontpage(
       "<html>"
       "<head>"
       "  <title>Polish Declension Trainer</title>"
+      "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">"
       "</head>"
       "<body>"
       "  <a href=\"practice\">Start practicing!</a>"
@@ -69,6 +70,7 @@ void QuestionServer::ServeLookup(
       "<html>"
       "<head>"
       "  <title>Polish Declension Trainer</title>"
+      "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">"
       "</head>"
       "<body>"
       "  <p>Not implemented yet!</p>"
@@ -84,6 +86,7 @@ void QuestionServer::ServePractice(
       "<html>"
       "<head>"
       "  <title>Practice</title>"
+      "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">"
       "</head>"
       "<body>";
   const std::string footer =
@@ -107,6 +110,7 @@ void QuestionServer::HandleRequest(const std::string& uri,
       "<html>"
       "<head>"
       "  <title>Not found!</title>"
+      "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">"
       "</head>"
       "<body>"
       "  <p>Page not found!!</p>"
