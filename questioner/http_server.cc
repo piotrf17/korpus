@@ -73,4 +73,30 @@ bool HTTPServer::Serve(int event,
   }  
 }
 
+void HTTPServer::ParseQuery(
+    const std::string& query,
+    std::unordered_map<std::string,std::string>* keyvalues) const {
+  std::string key = "";
+  std::string value = "";
+  bool building_key = true;
+  for (unsigned int i = 0; i < query.size(); ++i) {
+    if (query[i] == '=') {
+      building_key = false;
+    } else if (query[i] == '&') {
+      building_key = true;
+      (*keyvalues)[key] = value;
+    } else {
+      if (building_key) {
+        key += query[i];
+      } else {
+        value += query[i];
+      }
+    }
+  }
+  if (query[query.size() - 1] != '&') {
+    (*keyvalues)[key] = value;
+  }
+}
+
+
 }  // namespace questioner

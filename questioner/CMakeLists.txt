@@ -6,7 +6,8 @@ set(QUESTIONER_SRCS
     http_server.cc
     question_builder.cc
     question_server.cc
+    question.cc
     questioner.cc)
 
 add_executable(questioner ${QUESTIONER_SRCS})
-target_link_libraries(questioner mongoose pthread dl ${APP_LIBS})
+target_link_libraries(questioner mongoose pthread dl ctemplate ${APP_LIBS})

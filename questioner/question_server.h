@@ -45,6 +45,8 @@ class QuestionServer : public HTTPServer{
 
   korpus::Corpus* corpus_;
   korpus::Index* index_;
+
+  std::string template_root_;
 };
   
 }  // namespace questioner

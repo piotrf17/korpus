@@ -4,7 +4,7 @@ project(KORPUS)
 # all header files are specified relative to base
 include_directories(${PROJECT_SOURCE_DIR})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++0x -g -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++0x -g -Wall -Werror")
 
 ##############################################
 #  Configure required libraries

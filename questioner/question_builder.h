@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "questioner/question.h"
+
 namespace korpus {
 class Index;
 }  // namespace korpus
@@ -14,10 +16,14 @@ class QuestionBuilder {
   QuestionBuilder(const korpus::Index* index);
   ~QuestionBuilder();
 
-  void GetQuestion(std::string* question);
+  void Generate(int num_questions);
+
+  void GetQuestion(int num, std::string* question) const;
+  void GetAnswer(int num, std::string* answer) const;
   
  private:
   const korpus::Index* index_;
+  std::vector<Question> questions_;
 };
 
 }  // namespace questioner

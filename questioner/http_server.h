@@ -1,6 +1,7 @@
 #ifndef QUESTIONER_HTTP_SERVER_H
 #define QUESTIONER_HTTP_SERVER_H
 
+#include <unordered_map>
 #include <string>
 
 struct mg_connection;
@@ -26,6 +27,10 @@ class HTTPServer {
   virtual void HandleRequest(const std::string& uri,
                              const std::string& query,
                              std::string* output) = 0;
+
+  void ParseQuery(
+      const std::string& query,
+      std::unordered_map<std::string,std::string>* keyvalues) const;
   
  private:
 
