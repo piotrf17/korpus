@@ -12,6 +12,9 @@ Question::~Question() {
 }
 
 void Question::Build(const korpus::Result& result) {
+  words_.clear();
+  hidden_.clear();
+  
   int pos = result.GetContext(&words_);
 
   // Obscure words of the same case next to our word.
@@ -62,7 +65,17 @@ void Question::RenderAnswer(std::string* out) const {
       *out += words_[i]->value() + " ";
     }
   }
+}
 
+// Generate an ID to identify this question.  All similar questions will
+// have the same ID.  Currently just hash the words in the sentence.
+unsigned int Question::Id() const {
+  std::string sentence;
+  for (korpus::Lexeme* lexeme : words_) {
+    sentence += lexeme->value();
+  }
+  std::hash<std::string> hash_fn;
+  return hash_fn(sentence);
 }
 
 }  // namespace questioner

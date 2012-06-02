@@ -2,6 +2,8 @@
 
 #include <cassert>
 #include <iostream>
+#include <time.h>
+#include <unordered_set>
 
 #include "korpus/index.h"
 #include "korpus/lexeme.h"
@@ -11,6 +13,7 @@ namespace questioner {
 
 QuestionBuilder::QuestionBuilder(const korpus::Index* index) :
     index_(index) {
+  srand(time(NULL));
 }
 
 QuestionBuilder::~QuestionBuilder() {
@@ -25,15 +28,17 @@ void QuestionBuilder::Generate(int num_questions) {
   query.push_back(":subst");
   index_->Query(query, &results);
 
-  // TODO(piotrf): check that we actually have num_questions
-  // results!
-  
+  num_questions = std::min(num_questions, static_cast<int>(results.size()));
+
   questions_.resize(num_questions);
+  std::unordered_set<unsigned int> current_questions;
   for (int i = 0; i < num_questions; ++i) {
-    // Choose a random result to make a question.
-    // TODO(piotrf): dedup between questions.
-    int result_idx = rand() % results.size();
-    questions_[i].Build(results[result_idx]);
+    // Repeat until we get a unique question.
+    do {    
+      int result_idx = rand() % results.size();
+      questions_[i].Build(results[result_idx]);
+    } while (current_questions.count(questions_[i].Id()));
+    current_questions.insert(questions_[i].Id());
   }
 }
 

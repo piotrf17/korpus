@@ -102,9 +102,9 @@ void QuestionServer::ServePractice(
   question_builder_->GetAnswer(question_num, &answer);
   dict.SetValue("ANSWER", answer);
 
-  dict.SetIntValue("NEXTQ", question_num + 2);
+  dict.SetIntValue("NEXTQ", question_num + 1);
   dict.SetIntValue("CURQ", question_num + 1);
-  dict.SetIntValue("TOTALQ", 20);
+  dict.SetIntValue("TOTALQ", question_builder_->num_questions());
 
   ctemplate::ExpandTemplate(template_root_ + "practice.tpl",
                             ctemplate::DO_NOT_STRIP,

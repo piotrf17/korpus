@@ -20,6 +20,10 @@ class QuestionBuilder {
 
   void GetQuestion(int num, std::string* question) const;
   void GetAnswer(int num, std::string* answer) const;
+
+  int num_questions() const {
+    return questions_.size();
+  }
   
  private:
   const korpus::Index* index_;

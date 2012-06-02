@@ -20,6 +20,8 @@ class Question {
 
   void RenderQuestion(std::string* out) const;  
   void RenderAnswer(std::string* out) const;
+
+  unsigned int Id() const;
   
  private:
   std::vector<korpus::Lexeme*> words_;
