@@ -12,7 +12,7 @@
       state = 1;
     }
     function nextquestion(last_difficulty) {
-      window.location = "?q={{NEXTQ}}&la=" + last_difficulty;
+      window.location = "?q={{NEXTQ}}&ld=" + last_difficulty;
     }
     $(document).keydown(function(event) {
       if (state == 0) {

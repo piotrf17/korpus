@@ -85,13 +85,24 @@ void QuestionServer::ServePractice(
     question_builder_->Generate(20);
   }
 
+  // Extract query params.
   std::unordered_map<std::string,std::string> keys;
   ParseQuery(query, &keys);
   int question_num = 0;
   if (keys.count("q")) {
     question_num = atoi(keys["q"].c_str());
   }
+  int last_difficulty = -1;
+  if (keys.count("ld")) {
+    last_difficulty = atoi(keys["ld"].c_str());
+  }
 
+  // Log our last question response.
+  if (last_difficulty >= 0) {
+    deck_.LogQuestion(question, last_difficulty);
+  }
+
+  // Fill the template with new question data.
   ctemplate::TemplateDictionary dict("practice");
 
   std::string question;
